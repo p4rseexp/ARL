@@ -127,3 +127,5 @@ node_modules
 docker/image/
 docker/arl_web.log
 docker/arl_worker.log
+docker/docker-test.yml
+app/.DS_Store

@@ -33,4 +33,19 @@ def push_dingding(markdown_report):
         logger.info("error on send dingding {}".format(markdown_report[:15]))
         logger.warning(e)
 
+def push_feishu(markdown_report):
+    try:
+        if Config.FEISHU_TOKEN:
+            data = push.feishu_send(msg=markdown_report, 
+                                    access_token=Config.FEISHU_TOKEN)
+            if data.get("code", -1) == 0:
+                logger.info("push dingding succ")
+                return True
+            else:
+                logger.info("{}".format(data))
+
+    except Exception as e:
+        logger.info("error on send feishu {}".format(markdown_report[:15]))
+        logger.warning(e)
+
 

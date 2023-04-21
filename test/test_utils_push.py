@@ -50,6 +50,9 @@ class TestUtilsPush(unittest.TestCase):
         self.assertTrue(Config.DINGDING_SECRET)
         self.assertTrue(Config.DINGDING_ACCESS_TOKEN)
 
+    def assert_feishu_config(self):
+        self.assertTrue(Config.FEISHU_TOKEN)
+
     def assert_email_config(self):
         self.assertTrue(Config.EMAIL_PASSWORD)
         self.assertTrue(Config.EMAIL_USERNAME)
@@ -83,6 +86,37 @@ class TestUtilsPush(unittest.TestCase):
         }
         p = push.Push(asset_map=asset_map, asset_counter=asset_counter)
         ret = p.push_dingding()
+        self.assertTrue(ret)
+
+    def test_feishu_push_domain(self):
+        self.assert_feishu_config()
+        asset_map = {
+            "site": self.site_data,
+            "domain": self.domain_data,
+            "task_name": "灯塔测试域名"
+        }
+        asset_counter = {
+            "site": 10,
+            "domain": 10
+        }
+        p = push.Push(asset_map=asset_map, asset_counter=asset_counter)
+        ret = p.push_feishu()
+        self.assertTrue(ret)
+
+    def test_feishu_push_ip(self):
+        self.assert_feishu_config()
+
+        asset_map = {
+            "site": self.site_data,
+            "ip": self.ip_data,
+            "task_name": "灯塔测试 IP"
+        }
+        asset_counter = {
+            "site": 10,
+            "ip": 10
+        }
+        p = push.Push(asset_map=asset_map, asset_counter=asset_counter)
+        ret = p.push_feishu()
         self.assertTrue(ret)
 
     def test_push_email_domain(self):

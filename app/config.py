@@ -62,6 +62,7 @@ class Config(object):
 
     DINGDING_SECRET = ""
     DINGDING_ACCESS_TOKEN = ""
+    FEISHU_TOKEN = ""
 
     EMAIL_HOST = ""
     EMAIL_PORT = ""
@@ -150,6 +151,11 @@ try:
 
         if y["DINGDING"].get("ACCESS_TOKEN"):
             Config.DINGDING_ACCESS_TOKEN = y["DINGDING"]["ACCESS_TOKEN"]
+    
+    # *** 飞书配置 ***
+    if y.get("FEISHU"):
+        if y["FEISHU"].get("TOKEN"):
+            Config.FEISHU_TOKEN = y["FEISHU"]["TOKEN"]
 
     # *** 邮箱配置 ***
     if y.get("EMAIL"):

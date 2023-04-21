@@ -2,7 +2,7 @@ import threading
 from app.helpers import asset_site, asset_domain
 from app import utils
 from app.helpers.scope import get_scope_by_scope_id
-from app.helpers.message_notify import push_email, push_dingding
+from app.helpers.message_notify import push_email, push_dingding, push_feishu
 from app.helpers.asset_site_monitor import is_black_asset_site
 from .baseThread import BaseThread
 from .fetchSite import fetch_site
@@ -301,6 +301,7 @@ class AssetSiteMonitor(object):
 
         markdown_report = self.build_markdown_report()
         push_dingding(markdown_report=markdown_report)
+        push_feishu(markdown_report=markdown_report)
 
 
 class Domain2SiteMonitor(object):

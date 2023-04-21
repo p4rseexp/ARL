@@ -71,6 +71,10 @@ DINGDING:
   SECRET: ""
   ACCESS_TOKEN: ""
 
+#飞书机器人
+FEISHU:
+  TOKEN: ""
+
 #邮件发送配置
 EMAIL:
   HOST: ""

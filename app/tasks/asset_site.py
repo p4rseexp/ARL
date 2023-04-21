@@ -2,7 +2,7 @@ from bson import ObjectId
 from app import utils
 from app.services.commonTask import CommonTask, WebSiteFetch
 from app.modules import TaskStatus
-from app.helpers.message_notify import push_email, push_dingding
+from app.helpers.message_notify import push_email, push_dingding, push_feishu
 from app.tasks.poc import RiskCruising
 from app.services import webhook
 logger = utils.get_logger()
@@ -75,6 +75,7 @@ class AssetSiteUpdateTask(CommonTask):
 
         if markdown_report:
             push_dingding(markdown_report=markdown_report)
+            push_feishu(markdown_report=markdown_report)
 
         if html_report or markdown_report:
             webhook.site_asset_web_hook(task_id=self.task_id, scope_id=self.scope_id)

@@ -109,6 +109,26 @@ class Push(object):
             logger.warning("发送失败 \n{}\n {}".format(tpl, ding_out))
             return False
         return True
+    
+    def _push_feishu(self):
+        tpl = ""
+        if self.domain_len > 0:
+            tpl = "[{}]新发现域名 `{}` , 站点 `{}`\n***\n".format(self.task_name, self.domain_len, self.site_len)
+            tpl = "{}\n{}".format(tpl, dict2dingding_mark(self.domain_info_list))
+
+        if self.ip_len > 0:
+            tpl = "[{}]新发现 IP `{}` , 站点 `{}`\n***\n".format(self.task_name, self.ip_len, self.site_len)
+            tpl = "{}\n{}".format(tpl, dict2dingding_mark(self.ip_info_list))
+
+        tpl += "\n***\n"
+        tpl = "{}\n{}".format(tpl, dict2dingding_mark(self.site_info_list))
+        feishu_out = feishu_send(msg=tpl, token=Config.FEISHU_TOKEN)
+
+        if feishu_out["code"] != 0:
+            logger.warning("发送失败 \n{}\n {}".format(tpl, feishu_out))
+            return False
+        
+        return True
 
     def _push_email(self):
         html = ""
@@ -143,6 +163,16 @@ class Push(object):
         except Exception as e:
             logger.warning(self.task_name, e)
 
+    def push_feishu(self):
+        try:
+            if Config.FEISHU_TOKEN:
+                if self._push_feishu():
+                    logger.info("push feishu succ")
+                    return True
+
+        except Exception as e:
+            logger.warning(self.task_name, e)
+
     def push_email(self):
         try:
             if Config.EMAIL_HOST and Config.EMAIL_USERNAME and Config.EMAIL_PASSWORD:
@@ -157,6 +187,7 @@ def message_push(asset_map, asset_counter):
     logger.info("ARL push run")
     p = Push(asset_map=asset_map, asset_counter=asset_counter)
     p.push_dingding()
+    p.push_feishu()
     p.push_email()
 
 
@@ -198,6 +229,29 @@ def dingding_send(msg, access_token, secret, msgtype="text", title="灯塔消息
     conn = http_req(ding_url, method='post', json=send_json)
     return conn.json()
 
+def feishu_send(msg, token, title="灯塔消息推送"):
+    feishu_url = "https://open.feishu.cn/open-apis/bot/v2/hook/{}".format(token)
+
+    send_json = {
+	"msg_type": "post",
+	"content": {
+		"post": {
+			"zh_cn": {
+				"title": title,
+				"content": [
+					[{
+							"tag": "text",
+							"text": msg
+						    }
+					    ]
+				    ]
+			    }
+		    }
+	    }
+    }  
+    conn = http_req(feishu_url, method='post', json=send_json)
+
+    return conn.json()
 
 def send_email(host, port, mail, password, to, title, html, smtp_timeout=10):
     context = ssl.create_default_context()
