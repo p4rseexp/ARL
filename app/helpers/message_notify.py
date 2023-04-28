@@ -39,7 +39,7 @@ def push_feishu(markdown_report):
             data = push.feishu_send(msg=markdown_report, 
                                     access_token=Config.FEISHU_TOKEN)
             if data.get("code", -1) == 0:
-                logger.info("push dingding succ")
+                logger.info("push feishu succ")
                 return True
             else:
                 logger.info("{}".format(data))
